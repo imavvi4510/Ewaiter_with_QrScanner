@@ -1,32 +1,41 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, Dimensions, Image} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Buttonn from './Buttom';
-const Cardlist = () => {
+import Swiper from 'react-native-swiper';
+const Cardlist = ({title, description, price, onAdd, unit, onRemove}) => {
   // console.log('hiyy');
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.tinyLogo}
-        source={require('./images/burger_icon.jpg')}
-      />
+      <View>
+        <Image
+          source={require('./images/burger_icon.jpg')}
+          style={styles.tinyLogo}
+        />
+      </View>
       <View
         style={{
-          flexDirection: 'column',
-          position: 'relative',
-          top: 20,
-          right: 0,
-          justifyContent: 'flex-end',
+          flexDirection: 'row',
+          backgroundColor: '',
+          flex: 1,
+          justifyContent: 'space-between',
+          margin: 5,
         }}>
-        <View style={{position: 'absolute', top: -59, right: 200}}>
-          <Text style={{backgroundColor: '#fff', fontSize: 20}}>
-            food name{' '}
-          </Text>
-          <Text style={{backgroundColor: '#fff', fontSize: 20}}>desc</Text>
+        <View style={{justifyContent: 'space-around'}}>
+          <View>
+            <Text style={{fontSize: 20, fontWeight: 'bold'}}>{title}</Text>
+          </View>
+          <View>
+            <Text style={{fontSize: 20, fontWeight: '500'}}>{description}</Text>
+          </View>
         </View>
-        <View style={{position: 'absolute', right: 0}}>
-          <Text style={{fontSize: 20}}> price</Text>
-          <Buttonn />
+        <View style={{justifyContent: 'space-around'}}>
+          <View>
+            <Text style={{fontSize: 20, fontWeight: 'bold'}}>$ {price}</Text>
+          </View>
+          <View>
+            <Buttonn onAdd={onAdd} onRemove={onRemove} unit={unit} />
+          </View>
         </View>
       </View>
     </View>
@@ -35,19 +44,28 @@ const Cardlist = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 50,
+    paddingTop: 0,
     backgroundColor: '#fff',
     height: 100,
     width: 400,
-    borderRadius: 10,
-    margin: 20,
+    borderRadius: 20,
+    flexDirection: 'row',
+    margin: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+
+    elevation: 15,
   },
   tinyLogo: {
     width: 100,
     height: 100,
-    position: 'absolute',
-    borderRadius: 10,
-    top: 0,
+
+    borderRadius: 20,
   },
 });
 export default Cardlist;

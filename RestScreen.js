@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -9,41 +9,118 @@ import {
   ImageBackground,
   Button,
   FlatList,
+  SectionList,
 } from 'react-native';
+import Swiper from 'react-native-swiper';
+import Snackbar from 'react-native-snackbar';
+// import snackbar from './snack';
 
 const screenwidth = Dimensions.get('screen').width;
 const mapper = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 import Cardlist from './Cardlist';
+import {data} from './data';
+import SnackBar from './snack';
 
 const Restscreen = () => {
+  const [selectedItems, setSelectedItems] = useState({});
+  const [selectedprice, setselectedprice] = useState({});
+  console.log('hii>>>>>>>>>>>>>>', selectedItems, selectedprice);
+  var result = Object.keys(selectedprice).reduce((prevValue, key) => {
+    return prevValue + Number(key) * selectedprice[key];
+  }, 0);
+  console.log(result);
+  Snackbar.show({
+    text: `TOTAL: ${result}`,
+    duration: Snackbar.LENGTH_INDEFINITE,
+    action: {
+      text: 'ORDER',
+      textColor: 'green',
+      onPress: () => {},
+    },
+  });
   return (
     <View style={styles.container}>
-      <View style={styles.body}>
-        <ImageBackground
-          source={require('./images/burger.jpg')}
-          style={{
-            width: Dimensions.get('screen').width,
-            height: 300,
-            justifyContent: 'flex-end',
-          }}>
-          <View
-            style={{
-              height: 120,
-              backgroundColor: 'rgba(0,0,0,0.6)',
-              padding: 10,
-            }}>
-            <Text style={{color: '#fff', fontSize: 40, fontWeight: '700'}}>
-              restro name
-            </Text>
-            <Text style={{color: '#fff', fontSize: 25, fontWeight: '500'}}>
-              restro adress
-            </Text>
-          </View>
-        </ImageBackground>
-        <FlatList
+      <View>
+        <View style={styles.sliderContainer}>
+          <Swiper
+            autoplay
+            horizontal={false}
+            height={200}
+            activeDotColor="#FF6347">
+            <View style={styles.slide}>
+              <Image
+                source={require('./images/cusin_1.jpg')}
+                resizeMode="cover"
+                style={styles.sliderImage}
+              />
+            </View>
+            <View style={styles.slide}>
+              <Image
+                source={require('./images/cusin_1.jpg')}
+                resizeMode="cover"
+                style={styles.sliderImage}
+              />
+            </View>
+            <View style={styles.slide}>
+              <Image
+                source={require('./images/cusin_1.jpg')}
+                resizeMode="cover"
+                style={styles.sliderImage}
+              />
+            </View>
+          </Swiper>
+        </View>
+        {/* <FlatList
           showsHorizontalScrollIndicator={false}
           data={mapper}
           renderItem={() => <Cardlist />}
+        /> */}
+        <SectionList
+          sections={data}
+          keyExtractor={(item, index) => item + index}
+          renderItem={({item}) => (
+            <Cardlist
+              {...item}
+              unit={selectedItems[item.id]}
+              onAdd={() => {
+                setSelectedItems((prevItems) => {
+                  return {
+                    ...prevItems,
+                    [item.id]: prevItems[item.id] ? prevItems[item.id] + 1 : 1,
+                  };
+                });
+
+                setselectedprice((prevprice) => {
+                  return {
+                    ...prevprice,
+                    [item.price]: prevprice[item.price]
+                      ? prevprice[item.price] + 1
+                      : 1,
+                  };
+                });
+              }}
+              onRemove={() => {
+                setSelectedItems((prevItems) => {
+                  return {
+                    ...prevItems,
+                    [item.id]: prevItems[item.id] ? prevItems[item.id] - 1 : 0,
+                  };
+                });
+                setselectedprice((prevprice) => {
+                  return {
+                    ...prevprice,
+                    [item.price]: prevprice[item.price]
+                      ? prevprice[item.price] - 1
+                      : 0,
+                  };
+                });
+              }}
+            />
+          )}
+          extraData={selectedItems}
+          // renderSectionHeader={({section: {title}}) => (
+          //   <Text style={styles.header}>{title}</Text>
+          // )}
         />
       </View>
     </View>
@@ -53,7 +130,7 @@ const Restscreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#395c43',
   },
   navigation: {
     flex: 1,
@@ -64,14 +141,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   body: {
-    flex: 10,
+    // flex: 10,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: '#FFF',
+    backgroundColor: 'red',
   },
   footer: {
     flex: 1,
     backgroundColor: 'cyan',
+  },
+
+  slide: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    borderRadius: 8,
+  },
+  sliderContainer: {
+    height: 200,
+    width: '95%',
+    marginTop: 10,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    borderRadius: 8,
   },
 });
 
