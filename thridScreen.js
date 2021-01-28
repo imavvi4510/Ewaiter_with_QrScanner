@@ -1,21 +1,38 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Image, SectionList, Text} from 'react-native';
 import Swiper from 'react-native-swiper';
 import Snackbar from 'react-native-snackbar';
+import database from '@react-native-firebase/database';
+
 // import snackbar from './snack';
 
 // const mapper = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 import Cardlist from './helper/Cardlist';
-import {data} from './data';
 
-const Restscreen = ({navigation}) => {
+const Restscreen = ({navigation, route}) => {
+  const {tableNumber} = route.params;
+
   const [selectedItems, setSelectedItems] = useState({});
   const [selectedprice, setselectedprice] = useState({});
+  const [data, setData] = useState([]);
+
   console.log('hii>>>>>>>>>>>>>>', selectedItems, selectedprice);
+
   var result = Object.keys(selectedprice).reduce((prevValue, key) => {
     return prevValue + Number(key) * selectedprice[key];
   }, 0);
+
   console.log(result);
+
+  useEffect(() => {
+    database()
+      .ref('/menu')
+      .on('value', (snapshot) => {
+        console.log('User data: ', snapshot.val());
+        setData(snapshot.val());
+      });
+  }, []);
+
   Snackbar.show({
     text: `TOTAL: ${result}`,
     duration: Snackbar.LENGTH_INDEFINITE,
@@ -23,7 +40,12 @@ const Restscreen = ({navigation}) => {
       text: 'ORDER',
       textColor: 'green',
       onPress: () => {
-        navigation.navigate('Conformation');
+        database()
+          .ref(`/order/${tableNumber}`)
+          .set(selectedItems)
+          .then(() => {
+            navigation.navigate('Conformation');
+          });
       },
     },
   });

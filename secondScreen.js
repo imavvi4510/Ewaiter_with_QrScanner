@@ -27,7 +27,9 @@ const ScanScreen = ({navigation}) => {
     // Called after te successful scanning of QRCode/Barcode
     setQrvalue(qrvalue);
     setOpneScanner(false);
-    navigation.navigate('MENU');
+    navigation.navigate('MENU', {
+      tableNumber: qrvalue,
+    });
     console.log(qrvalue);
   };
 

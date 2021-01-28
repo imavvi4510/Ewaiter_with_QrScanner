@@ -3,14 +3,19 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 
 import Buttonn from '../helper/Buttom';
 
-const Cardlist = ({title, description, price, onAdd, unit, onRemove}) => {
+const Cardlist = ({
+  title,
+  description,
+  price,
+  image,
+  onAdd,
+  unit,
+  onRemove,
+}) => {
   return (
     <View style={styles.container}>
       <View>
-        <Image
-          source={require('../images/burger_icon.jpg')}
-          style={styles.tinyLogo}
-        />
+        <Image source={{uri: image}} style={styles.tinyLogo} />
       </View>
       <View
         style={{
